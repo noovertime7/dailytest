@@ -3,6 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
+	"os"
+	"path/filepath"
+
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/client-go/informers"
@@ -10,9 +14,6 @@ import (
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/tools/clientcmd"
-	"log"
-	"os"
-	"path/filepath"
 )
 
 func getClientSet() *kubernetes.Clientset {
@@ -85,18 +86,20 @@ func main() {
 	//等待所有的informer同步完成
 	factory.WaitForCacheSync(stopCh)
 
+	fmt.Println("从indexer缓存中获取POD数据")
 	pods, err := podLister.Pods(v1.NamespaceAll).List(labels.Everything())
 	if err != nil {
 		log.Fatalln(err)
 	}
-
-	fmt.Println("从indexer缓存中获取POD数据")
 	for index, pod := range pods {
 		fmt.Println(index, "->", pod.Name)
 	}
 
 	fmt.Println("从indexer缓存中获取deployment数据")
 	deployments, err := deploymentLister.List(labels.Everything())
+	if err != nil {
+		log.Fatalln(err)
+	}
 	for index, deployment := range deployments {
 		fmt.Println(index, "->", deployment.Name)
 	}

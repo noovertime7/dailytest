@@ -3,6 +3,11 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
+	"os"
+	"path/filepath"
+	"time"
+
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/fields"
 	"k8s.io/apimachinery/pkg/util/runtime"
@@ -13,10 +18,6 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/util/workqueue"
 	"k8s.io/klog/v2"
-	"log"
-	"os"
-	"path/filepath"
-	"time"
 )
 
 // Controller POD控制器
@@ -36,12 +37,14 @@ func NewController(queue workqueue.RateLimitingInterface, indexer cache.Indexer,
 
 func (c *Controller) Run(threadiness int, stopCh chan struct{}) {
 	defer runtime.HandleCrash()
+
 	// 停止控制器后需要关闭queue
 	defer c.queue.ShutDown()
+
 	// 启动控制器
 	klog.Infof("启动 pod controller")
-	//启动通用看跑男龚子棋框架
 	go c.informer.Run(stopCh)
+
 	//等待所有相关的缓存同步完成，然后再开始处理队列中的数据
 	if !cache.WaitForCacheSync(stopCh, c.informer.HasSynced) {
 		runtime.HandleError(fmt.Errorf("time out waiting for caches to sync"))
@@ -75,7 +78,7 @@ func (c *Controller) processNextItem() bool {
 	return true
 }
 
-//业务逻辑处理
+// 业务逻辑处理
 func (c *Controller) syncToStdout(key string) error {
 	obj, exists, err := c.indexer.GetByKey(key)
 	if err != nil {
