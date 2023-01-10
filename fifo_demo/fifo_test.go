@@ -1,7 +1,6 @@
 package fifo_demo
 
 import (
-	"fmt"
 	"testing"
 	"time"
 )
@@ -32,9 +31,10 @@ func TestFIFO_requeueOnPop(t *testing.T) {
 		time.Sleep(3 * time.Second)
 	}
 	for i := 0; i < len(testData); i++ {
+		t.Logf("keys : %v", f.ListKeys())
 		data := Pop(f)
-		fmt.Println(data)
+		t.Log(data)
 	}
 	item, ok, err := f.Get(testFifoObject{name: "test", val: 10})
-	fmt.Println(item, ok, err)
+	t.Log(item, ok, err)
 }
