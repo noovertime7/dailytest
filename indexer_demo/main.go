@@ -66,6 +66,7 @@ func main() {
 	//fmt.Println(index.IndexKeys(NamespaceIndexName, "default"))
 
 	// ByIndex 两个参数：IndexName（索引器名称）和 indexKey（需要检索的key）
+	fmt.Printf("%s 索引器中生成的所有索引 %v\n", NamespaceIndexName, index.ListIndexFuncValues(NamespaceIndexName))
 	pods, err := index.ByIndex(NamespaceIndexName, "default")
 	if err != nil {
 		panic(err)
@@ -76,6 +77,7 @@ func main() {
 
 	fmt.Println("==========================")
 
+	fmt.Printf("%s 索引器中生成的所有索引 %v\n", NodeNameIndexName, index.ListIndexFuncValues(NodeNameIndexName))
 	pods, err = index.ByIndex(NodeNameIndexName, "node2")
 	if err != nil {
 		panic(err)
@@ -86,7 +88,18 @@ func main() {
 
 }
 
-//- IndexFunc：索引器函数，用于计算一个资源对象的索引值列表，上面示例是指定命名空间为索引值结果，当然我们也可以根据需求定义其他的，比如根据 Label 标签、Annotation 等属性来生成索引值列表。
-//- Index：存储数据，对于上面的示例，我们要查找某个命名空间下面的 Pod，那就要让 Pod 按照其命名空间进行索引，对应的 Index 类型就是 `map[namespace]sets.pod`。
-//- Indexers：存储索引器，key 为索引器名称，value 为索引器的实现函数，上面的示例就是 `map["namespace"]MetaNamespaceIndexFunc`。
-//- Indices：存储缓存器，key 为索引器名称，value 为缓存的数据，对于上面的示例就是 `map["namespace"]map[namespace]sets.pod`。
+// Indexers: {
+//		namespace: NamespaceIndexFunc,
+//		nodeName:  NodeNameIndexFunc
+//}
+
+// Indices: {
+//	  namespace: {
+//	 	default: set["default/pod1","default/pod2"],
+//		kube-system: set["kube-system/pod3"]
+//	  },
+//	  nodeName: {
+//	 	node1: set["default/pod4","kube-system/pod5"],
+//		node2: set["ingress-nginx/pod6","default/pod7"],
+//	  }
+//}
