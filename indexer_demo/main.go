@@ -62,6 +62,9 @@ func main() {
 	_ = index.Add(pod2)
 	_ = index.Add(pod3)
 
+	//fmt.Println("当前所有objet key", index.ListKeys())
+	//fmt.Println(index.IndexKeys(NamespaceIndexName, "default"))
+
 	// ByIndex 两个参数：IndexName（索引器名称）和 indexKey（需要检索的key）
 	pods, err := index.ByIndex(NamespaceIndexName, "default")
 	if err != nil {
