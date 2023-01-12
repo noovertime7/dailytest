@@ -60,10 +60,13 @@ func main() {
 	// kubectl run --image=nginx nginx-app --port=80
 	podList, err := clientSet.CoreV1().Pods("default").List(ctx, metav1.ListOptions{})
 	Must(err)
-	for _, pod := range podList.Items {
-		fmt.Printf("List获取到POD: %s\n", pod.Name)
+	if len(podList.Items) == 0 {
+		fmt.Println("当前命名空间下POD资源为空")
+	} else {
+		for _, pod := range podList.Items {
+			fmt.Printf("List获取到POD: %s\n", pod.Name)
+		}
 	}
-
 	fmt.Println("开始watch POD 变化...")
 	w, err := clientSet.CoreV1().Pods("default").Watch(ctx, metav1.ListOptions{})
 	Must(err)
@@ -77,6 +80,13 @@ func main() {
 				return
 			}
 			fmt.Printf("Watch 到 %s 变化,EventType: %s\n", pod.Name, event.Type)
+			fmt.Println("------------")
 		}
 	}
 }
+
+//
+//新增  ADD
+//新增 Modify  调度 增加nodeName，更新status字段
+//新增 Modify  status 增加更多字段，主要是修改status的message信息，例如 "containers with unready status: [nginx-app]"
+//新增 Modify  status 增加IP地址，status的message置为空,修改pod运行状态为Running
