@@ -85,8 +85,8 @@ func main() {
 	}
 }
 
-//
-//新增  ADD
-//新增 Modify  调度 增加nodeName，更新status字段
-//新增 Modify  status 增加更多字段，主要是修改status的message信息，例如 "containers with unready status: [nginx-app]"
-//新增 Modify  status 增加IP地址，status的message置为空,修改pod运行状态为Running
+// 注意: 每次resourceVersion 都会增加
+//新增 ADD
+//修改 Modify  调度完成 绑定nodeName，更新status字段
+//修改 Modify  status 增加更多字段，主要是修改status的message信息，例如 "containers with unready status: [nginx-app]"
+//修改 Modify  从cni网络插件中获取到POD的ip地址并填充到status中，status的message置为空,修改pod运行状态为Running
