@@ -14,10 +14,6 @@ func testFifoObjectKeyFunc(obj interface{}) (string, error) {
 	return obj.(testFifoObject).name, nil
 }
 
-func mkFifoObj(name string, val interface{}) testFifoObject {
-	return testFifoObject{name: name, val: val}
-}
-
 func TestFIFO_requeueOnPop(t *testing.T) {
 	f := NewFIFO(testFifoObjectKeyFunc)
 	var testData = []testFifoObject{
