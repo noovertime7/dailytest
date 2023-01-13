@@ -45,6 +45,15 @@ func TestBackoffUntil(t *testing.T) {
 	}, backoffManager, false, stopCh)
 }
 
+func TestPollImmediate(t *testing.T) {
+	if err := PollImmediate(1*time.Second, 2*time.Second, func() (done bool, err error) {
+		t.Logf("start")
+		return false, nil
+	}); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestK8SBackoffUntil(t *testing.T) {
 	stopCh := make(<-chan struct{})
 	backoffManager := wait.NewExponentialBackoffManager(800*time.Millisecond, 30*time.Second, 2*time.Minute, 2.0, 1.0, &clock.RealClock{})

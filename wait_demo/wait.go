@@ -66,6 +66,14 @@ func (cf ConditionFunc) WithContext() ConditionWithContextFunc {
 type ConditionWithContextFunc func(context.Context) (done bool, err error)
 type WaitWithContextFunc func(ctx context.Context) <-chan struct{}
 
+func PollImmediate(interval, timeout time.Duration, condition ConditionFunc) error {
+	return PollImmediateWithContext(context.Background(), interval, timeout, condition.WithContext())
+}
+
+func PollImmediateWithContext(ctx context.Context, interval, timeout time.Duration, condition ConditionWithContextFunc) error {
+	return poll(ctx, true, poller(interval, timeout), condition)
+}
+
 func PollImmediateUntil(interval time.Duration, condition ConditionFunc, stopCh <-chan struct{}) error {
 	ctx, cancel := ContextForChannel(stopCh)
 	defer cancel()
@@ -121,7 +129,7 @@ func WaitForWithContext(ctx context.Context, wait WaitWithContextFunc, fn Condit
 }
 
 func poller(interval, timeout time.Duration) WaitWithContextFunc {
-	return WaitWithContextFunc(func(ctx context.Context) <-chan struct{} {
+	return func(ctx context.Context) <-chan struct{} {
 		ch := make(chan struct{})
 
 		go func() {
@@ -158,7 +166,7 @@ func poller(interval, timeout time.Duration) WaitWithContextFunc {
 		}()
 
 		return ch
-	})
+	}
 }
 
 func ContextForChannel(parentCh <-chan struct{}) (context.Context, context.CancelFunc) {
