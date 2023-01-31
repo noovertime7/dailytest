@@ -67,12 +67,14 @@ func (s *sshWsHandler) SetUp(ctx *gin.Context) error {
 	cols, _ := strconv.Atoi(ctx.DefaultQuery("cols", "188"))
 	rows, _ := strconv.Atoi(ctx.DefaultQuery("rows", "42"))
 	terminalConfig := termical.Config{
-		IpAddress: "yunxue521.top",
-		Port:      "22",
-		UserName:  "root",
-		Password:  "1qaz@WSXchenteng@",
-		Width:     cols,
-		Height:    rows,
+		IpAddress:     "yunxue521.top",
+		Port:          "22",
+		UserName:      "root",
+		Password:      "1qaz@WSXchenteng@",
+		PrivateKey:    "",
+		KeyPassphrase: "",
+		Width:         cols,
+		Height:        rows,
 	}
 	ws, err := UpGrader.Upgrade(ctx.Writer, ctx.Request, nil)
 	if err != nil {
