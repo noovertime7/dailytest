@@ -60,7 +60,7 @@ func initProvider() (func(context.Context) error, error) {
 	// probably connect directly to the service through dns.
 	ctx, cancel := context.WithTimeout(ctx, time.Second)
 	defer cancel()
-	conn, err := grpc.DialContext(ctx, "192.168.11.207:3200",
+	conn, err := grpc.DialContext(ctx, "192.168.11.207:4317",
 		// Note the use of insecure transport here. TLS is recommended in production.
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock(),
@@ -124,7 +124,7 @@ func main() {
 		"CollectorExporter-Example",
 		trace.WithAttributes(commonAttrs...))
 	defer span.End()
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 1000; i++ {
 		_, iSpan := tracer.Start(ctx, fmt.Sprintf("Sample-%d", i))
 		log.Printf("Doing really hard work (%d / 10)\n", i+1)
 
