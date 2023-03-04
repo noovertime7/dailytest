@@ -68,6 +68,7 @@ func main() {
 		}
 	}
 	fmt.Println("开始watch POD 变化...")
+
 	w, err := clientSet.CoreV1().Pods("default").Watch(ctx, metav1.ListOptions{})
 	Must(err)
 	defer w.Stop()

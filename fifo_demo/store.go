@@ -107,6 +107,7 @@ func MetaNamespaceKeyFunc(obj interface{}) (string, error) {
 	if len(meta.GetNamespace()) > 0 {
 		return meta.GetNamespace() + "/" + meta.GetName(), nil
 	}
+	// default/pod-xxxsad-223das
 	return meta.GetName(), nil
 }
 
