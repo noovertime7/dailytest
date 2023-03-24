@@ -73,12 +73,14 @@ func main() {
 			fmt.Println("delete", obj.(*v1.Pod).Name)
 		},
 	})
+
 	// 可以添加多个EventHandler
 	sharedIndexInformer.AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
 			fmt.Println("add2", obj.(*v1.Pod).Name)
 		},
 	})
+
 	stopCh := make(chan struct{})
 	// 启动factory
 	factory.Start(stopCh)

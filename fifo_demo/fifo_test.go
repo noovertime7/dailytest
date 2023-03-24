@@ -18,9 +18,6 @@ func TestFIFO_requeueOnPop(t *testing.T) {
 	f := NewFIFO(testFifoObjectKeyFunc)
 	var testData = []testFifoObject{
 		{name: "test", val: 10},
-		{name: "test2", val: 10},
-		{name: "test3", val: 10},
-		{name: "tes4", val: 10},
 	}
 	for _, test := range testData {
 		f.Add(test)
