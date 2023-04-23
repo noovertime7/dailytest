@@ -32,13 +32,17 @@ func main() {
 	serviceTestKey := "testKey"
 
 	cli, err := clientv3.New(clientv3.Config{
-		Endpoints: []string{"127.0.0.1:2379"},
+		DialTimeout: 3 * time.Second,
+		Endpoints:   []string{"127.0.0.1:2379"},
+		Username:    "root",
+		Password:    "3s4d5cvybnm3AS4gyi5F6G7H8J",
 	})
 
 	if err != nil {
 		panic(err)
 	}
 	r := etcd.New(cli)
+	go WatchService(context.TODO(), "helloworld", r)
 
 	claims := &CustomClaims{
 		BaseClaims: BaseClaims{
@@ -69,22 +73,6 @@ func main() {
 		log.Fatal(err)
 	}
 	defer connGRPC.Close()
-
-	//connHTTP, err := http.NewClient(
-	//	context.Background(),
-	//	http.WithEndpoint("discovery:///helloworld"),
-	//	http.WithDiscovery(r),
-	//	http.WithBlock(),
-	//	http.WithMiddleware(
-	//		jwt.Client(func(token *jwtv4.Token) (interface{}, error) {
-	//			return []byte(serviceTestKey), nil
-	//		}),
-	//	),
-	//)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//defer connHTTP.Close()
 
 	for {
 		//callHTTP(connHTTP)
