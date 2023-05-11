@@ -12,7 +12,7 @@ import (
 func main() {
 	chartPath := "./charts.tgz"
 	namespace := "default"
-	releaseName := "main-sky-beta"
+	releaseName := "minio"
 
 	settings := cli.New()
 
