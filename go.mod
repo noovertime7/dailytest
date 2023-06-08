@@ -11,9 +11,11 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.4.1
 	github.com/google/wire v0.5.0
 	github.com/gorilla/websocket v1.4.2
+	github.com/mittwald/go-helm-client v0.12.1
 	github.com/prometheus-operator/prometheus-operator/pkg/client v0.63.0
 	github.com/prometheus/client_golang v1.14.0
 	github.com/sirupsen/logrus v1.9.0
+	github.com/wumansgy/goEncrypt v1.1.0
 	go.etcd.io/etcd/client/v3 v3.5.5
 	go.opentelemetry.io/otel v1.14.0
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.14.0
@@ -135,7 +137,6 @@ require (
 	github.com/mitchellh/copystructure v1.2.0 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
-	github.com/mittwald/go-helm-client v0.12.1 // indirect
 	github.com/moby/locker v1.0.1 // indirect
 	github.com/moby/spdystream v0.2.0 // indirect
 	github.com/moby/term v0.0.0-20221205130635-1aeaba878587 // indirect
