@@ -17,7 +17,7 @@ type Markdown struct {
 	Text  string `json:"text"`
 }
 
-var ACCESS_TOKEN = "bcfd8cf271684da5c50e7ff73c69b6ebb71d1cacccd4ba11e830296208e4b590"
+var ACCESS_TOKEN = "ccfd8cf271684da5c50e7ff73c69b6ebb71d1cacccd4ba11e830296208e4b590"
 
 func main() {
 	msg := Message{
