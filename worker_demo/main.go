@@ -1,62 +1,93 @@
-package main
+package worker_demo
 
 import (
 	"fmt"
-	"github.com/go-kratos/kratos/v2/log"
 	"k8s.io/apimachinery/pkg/util/wait"
+	"log"
 	"sync"
 	"time"
 )
 
-type Manager struct {
-	Tasks map[string]chan struct{}
-	lock  *sync.Mutex
+type Worker interface {
+	AddWorkerTask(name string)
+	Run(name string, period time.Duration, f func()) error
+	Stop(name string)
+	StopAll()
 }
 
-func (m *Manager) Run(name string, period time.Duration, f func()) error {
-	m.lock.Lock()
-	defer m.lock.Unlock()
-	stopCh, has := m.Tasks[name]
-	if !has {
-		return fmt.Errorf("%s not register", name)
+type workers struct {
+	Tasks sync.Map
+}
+
+type workerTask struct {
+	stopCh chan struct{}
+}
+
+func NewWorker() Worker {
+	return &workers{
+		Tasks: sync.Map{},
 	}
-	go wait.Until(f, period, stopCh)
+}
+
+func (w *workers) AddWorkerTask(name string) {
+	task := &workerTask{
+		stopCh: make(chan struct{}),
+	}
+	w.Tasks.Store(name, task)
+}
+
+func (w *workers) Run(name string, period time.Duration, f func()) error {
+	task, ok := w.Tasks.Load(name)
+	if !ok {
+		return fmt.Errorf("%s not registered", name)
+	}
+
+	taskObj := task.(*workerTask)
+	go wait.Until(f, period, taskObj.stopCh)
 	return nil
-	// 启动任务
-	//go func() {
-	//	for {
-	//		select {
-	//		case <-m.Tasks[name]:
-	//			fmt.Println(name, "stopped")
-	//			return
-	//		default:
-	//
-	//			// 执行任务逻辑
-	//		}
-	//	}
-	//}()
 }
 
-func (m *Manager) Stop(name string) {
-	m.lock.Lock()
-	defer m.lock.Unlock()
-	log.Info("发送stop信号")
-	m.Tasks[name] <- struct{}{}
-	delete(m.Tasks, name)
+func (w *workers) Stop(name string) {
+	task, ok := w.Tasks.Load(name)
+	if !ok {
+		return
+	}
+
+	taskObj := task.(*workerTask)
+	close(taskObj.stopCh)
+	w.Tasks.Delete(name)
+
+	log.Println(name, "stop")
 }
 
-func main() {
-	m := Manager{Tasks: map[string]chan struct{}{
-		"task1": make(chan struct{}),
-	}, lock: &sync.Mutex{}}
-
-	m.Run("task1", 1*time.Second, func() {
-		fmt.Println("task1 run")
+func (w *workers) StopAll() {
+	w.Tasks.Range(func(key, value interface{}) bool {
+		taskObj := value.(*workerTask)
+		close(taskObj.stopCh)
+		w.Tasks.Delete(key)
+		return true
 	})
-
-	time.Sleep(2 * time.Second)
-	// 停止任务
-
-	m.Stop("task1")
-	time.Sleep(2 * time.Hour)
 }
+
+//func main() {
+//	w := NewWorker()
+//
+//	tasksMap := []string{
+//		"task1", "tasl2", "task3",
+//	}
+//
+//	for _, task := range tasksMap {
+//		w.AddWorkerTask(task)
+//
+//		w.Run(task, 1*time.Second, func() {
+//			fmt.Println(task, "running")
+//		})
+//
+//		time.Sleep(2 * time.Second)
+//		// 停止任务
+//
+//		w.Stop(task)
+//	}
+//
+//	time.Sleep(2 * time.Hour)
+//}
