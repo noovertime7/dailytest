@@ -1,9 +1,9 @@
 package exampletasks
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/RichardKnop/machinery/v2/log"
@@ -54,9 +54,21 @@ func Concat(strs []string) (string, error) {
 	return res, nil
 }
 
+type Demo struct {
+	In   []string
+	Name string
+}
+
 // Split ...
-func Split(str string) ([]string, error) {
-	return strings.Split(str, ""), nil
+func Split(str []string, name string) (string, error) {
+	fmt.Println("被调用")
+	fmt.Println("接收到参数", str)
+	data, _ := json.Marshal(Demo{
+		In:   str,
+		Name: name,
+	})
+
+	return string(data), nil
 }
 
 // PanicTask ...

@@ -18,19 +18,22 @@ var PrivateKey = `LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUV2UUlCQURBTkJna3Foa2
 var PublicKey = `LS0tLS1CRUdJTiBQdWJsaWMgS2V5LS0tLS0KTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUE3ODN6MXVHSW43OG5tUm5sZm9QNQpSc25ibWRoQit0RG95eEFLQVBWU3JXZW5NZGdKRnZuMlJjYWlRQmVIMkJiS05RY1AveWdZZU9FQzJaaGIrRVpICkF3eVQwWm8zNHZaUUFnVldPaTV6VkROd3h1NFZQZmMrMjUrWU5BcitaeS90eHFKbFdGNUViUHlxalNaR1FRSS8KeHdaU3ZnVzc2dWN6MnZqMkxLb3lkZEVTcGJtVjBRUVlWeHZRMWdIb0JPREhYdWM2ZER3UVpNOWNQV2gvTi9uSAo5STQ1VHkwWldDVE9qOXFDay85MkNoTGFJL2hZNDU1MnlMRE1yenNxRXFyTDBLc0NRS3FuVHlDZVVncXZIRnhHCkswelp0MzVvYjBDN3AxRllKNEhISGZUSFY2VDBhOFUxQ1l1YTVOSk5pNW1QK05iNktJeXVXQ0hyUUdlS2VONzUKQ3dJREFRQUIKLS0tLS1FTkQgUHVibGljIEtleS0tLS0t`
 
 func RsaDecode(strPlainText string) (string, error) {
+	fmt.Println("len  -----", len(strPlainText))
+
+	fmt.Println(fmt.Sprintf("[%s]", strPlainText))
+
 	plainText, err := base64.StdEncoding.DecodeString(strPlainText)
 	if err != nil {
 		return "", fmt.Errorf("base64 decode error: %v", err)
 	}
 	bytePrivateKey, err := base64.StdEncoding.DecodeString(PrivateKey)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("base64.StdEncoding.DecodeString(PrivateKey) %v", err)
 	}
-
 	priBlock, _ := pem.Decode(bytePrivateKey)
 	priKey, err := x509.ParsePKCS8PrivateKey(priBlock.Bytes)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("x509.ParsePKCS8PrivateKey")
 	}
 	decryptText, err := rsa.DecryptPKCS1v15(rand.Reader, priKey.(*rsa.PrivateKey), plainText)
 	if err != nil {
@@ -134,7 +137,7 @@ func Cipher() {
 	//加密key
 	encryptKey, err := RsaEncode(key)
 	fmt.Println("key", key)
-	fmt.Println()
+	fmt.Println(RsaDecode(encryptKey))
 	fmt.Println("加密之后的key", encryptKey)
 
 	// 按照index=3进行分割，将base64Data后面的放到前面
@@ -157,7 +160,12 @@ func Cipher() {
 }
 
 func main() {
-	Cipher()
+	encodeData, err := RsaEncode("KBlcuRGMBk")
+	fmt.Println(encodeData, err)
+	data, err := RsaDecode("sQTWt+Miz7YToVBt1LQXpZHsxNuY3VYJUrxXODCQ1OJUPy9mgRRqjwyW0sUVyYbMVKXtCxQ8tZgYIU8H50AmeekSvuc2zBSdcDKcSnJ4ITg8T15/XGBwu2g4wv4y8LyUgpvedL+hIlizcsq21A9HDZ1RjFdsUQdlRPQE1wmsJ0d4np1nnxkOINlkjcy//uiSZ3fr5LuwTIYpbbA4jNlcXbxWB6cLB4Cs0u5Eiu/W+XF7m2uif9pxv7mNXbpXFH4DmMMsOw1doilA0snAOsJIVmJAZdwmocEQx8TWO2GrwC7KhX9gc39XXS7RFhZ5DUfZFqfqRtw+5Usm2weg1gVy9g==")
+	fmt.Println(data, err)
+
+	//Cipher()
 }
 
 func reverseString(s string) string {
