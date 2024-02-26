@@ -8,8 +8,8 @@ import (
 
 func main() {
 	// 指定文件夹和文件名
-	folderPath := "E:\\code\\dailytest\\file_websocket_demo"
-	fileName := "example.txt"
+	folderPath := "/Users/admin/code/kubemanage/log/workflow/7164494158366175232"
+	fileName := "delayTime"
 
 	builder := runtime.FileBuilder{}
 	w := builder.FolderName(folderPath).FileName(fileName).Build()
