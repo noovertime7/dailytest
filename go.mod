@@ -5,12 +5,15 @@ go 1.18
 require (
 	github.com/casbin/casbin/v2 v2.57.0
 	github.com/casbin/gorm-adapter/v3 v3.13.0
+	github.com/eclipse/paho.mqtt.golang v1.4.3
 	github.com/gin-gonic/gin v1.9.0
 	github.com/go-kratos/kratos/contrib/registry/etcd/v2 v2.0.0-20230323030821-f47a238478e1
 	github.com/go-kratos/kratos/v2 v2.6.1
+	github.com/goburrow/modbus v0.1.0
 	github.com/golang-jwt/jwt/v4 v4.4.2
 	github.com/google/wire v0.5.0
-	github.com/gorilla/websocket v1.4.2
+	github.com/gorhill/cronexpr v0.0.0-20180427100037-88b0669f7d75
+	github.com/gorilla/websocket v1.5.0
 	github.com/mittwald/go-helm-client v0.12.1
 	github.com/prometheus-operator/prometheus-operator/pkg/client v0.63.0
 	github.com/prometheus/client_golang v1.15.1
@@ -88,6 +91,7 @@ require (
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.11.2 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
+	github.com/goburrow/serial v0.1.0 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/goccy/go-json v0.10.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
