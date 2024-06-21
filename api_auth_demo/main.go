@@ -100,7 +100,7 @@ func hasRequiredPermissions(nodePermissions, requiredPermissions []string) bool 
 // main 主函数展示如何使用前缀树进行权限校验
 func main() {
 	trie := NewTrie()
-	trie.Insert("/api/v1/agent/:service/info", []string{"admin"})
+	trie.Insert("/api/v1/backup/snapshot/page/:service", []string{"admin"})
 	trie.Insert("/api/user/delete/:id", []string{"admin", "superuser"})
 
 	testCases := []struct {
@@ -108,7 +108,7 @@ func main() {
 		requiredPermissions []string
 		expectedResult      bool
 	}{
-		{"/api/v1/agent/abc/aaaa", []string{"admin"}, true}, // should be false
+		{"/api/v1/backup/snapshot/page/local-test", []string{"admin"}, true}, // should be false
 		{"/api/user/delete/123", []string{"admin"}, true},
 		{"/api/user/delete/123", []string{"superuser"}, true},
 		{"/api/user/delete/123", []string{"guest"}, false},

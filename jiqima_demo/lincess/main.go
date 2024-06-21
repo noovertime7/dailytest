@@ -8,22 +8,24 @@ import (
 )
 
 type License struct {
-	Name         string    `json:"name"`
-	Capacity     int64     `json:"capacity"`
-	AgentNum     int64     `json:"agent_num"`
-	IssuanceTime time.Time `json:"issuance_time"`
-	ExpireTime   time.Time `json:"expire_time"`
-	Code         string    `json:"code"`
+	Name           string
+	IsAuth         bool      `json:"isAuth"`
+	AgentNum       int64     `json:"agentNum"`
+	BackupCapacity int64     `json:"backupCapacity"`
+	IssuanceDate   time.Time `json:"issuanceDate"`
+	ExpireDate     time.Time `json:"expireDate"`
+	Code           string    `json:"code"`
+	UsedAgentNum   int64     `json:"usedAgentNum"`
+	UsedCapacity   int64     `json:"usedCapacity"`
 }
 
 func main() {
 	license := License{
-		Name:         "lincess",
-		Capacity:     100,
-		AgentNum:     100,
-		IssuanceTime: time.Now(),
-		ExpireTime:   time.Now().Add(time.Hour * 24 * 365),
-		Code:         "VPbgqKUsykSIfuv8O2Y5PiKSuEm4ihXN2Mo52fAdRqjkfvbkZq7tp4s7ayR75+tP",
+		Name:           "license_test2",
+		BackupCapacity: 200000000000,
+		AgentNum:       30,
+		IssuanceDate:   time.Now(),
+		Code:           "8db63be3c8b5edb937045e6eebb7a011",
 	}
 
 	l, _ := json.Marshal(license)
