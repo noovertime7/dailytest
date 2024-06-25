@@ -90,21 +90,7 @@ func convertFrequencyToCron(frequency string) string {
 }
 
 func main() {
-	// 示例输入
-	backupPeriod := "每周"
-	daysOfWeek := []string{"周一", "周二", "周三", "周四", "周五"}
-	dayOfMonth := 0
-	timeOfDay := time.Date(0, 1, 1, 9, 0, 0, 0, time.UTC)
-	repeatDuration := 24
-	repeatFrequency := "小时"
-
-	// 生成 Cron 表达式
-	cronExpression := generateCronExpression(backupPeriod, daysOfWeek, dayOfMonth, timeOfDay, repeatDuration, repeatFrequency)
-
-	// 打印生成的 Cron 表达式
-	fmt.Println("生成的 Cron 表达式:", cronExpression)
-
-	times := cronexpr.MustParse(cronExpression).NextN(time.Now(), 5)
+	times := cronexpr.MustParse(" * * * * ?").NextN(time.Now(), 5)
 
 	for _, t := range times {
 		fmt.Println(t.String())

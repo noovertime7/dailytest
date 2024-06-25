@@ -12,7 +12,6 @@ require (
 	github.com/goburrow/modbus v0.1.0
 	github.com/golang-jwt/jwt/v4 v4.4.2
 	github.com/google/wire v0.5.0
-	github.com/gorhill/cronexpr v0.0.0-20180427100037-88b0669f7d75
 	github.com/gorilla/websocket v1.5.0
 	github.com/mittwald/go-helm-client v0.12.1
 	github.com/prometheus-operator/prometheus-operator/pkg/client v0.63.0
@@ -105,6 +104,7 @@ require (
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 // indirect
 	github.com/google/uuid v1.3.0 // indirect
+	github.com/gorhill/cronexpr v0.0.0-20180427100037-88b0669f7d75 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/gosuri/uitable v0.0.4 // indirect
 	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79 // indirect

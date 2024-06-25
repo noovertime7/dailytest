@@ -25,7 +25,7 @@ func main() {
 		BackupCapacity: 200000000000,
 		AgentNum:       30,
 		IssuanceDate:   time.Now(),
-		Code:           "8db63be3c8b5edb937045e6eebb7a011",
+		Code:           "075e41d1f55381d69f36b48c4aa859ce",
 	}
 
 	l, _ := json.Marshal(license)
