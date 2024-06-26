@@ -28,7 +28,6 @@ type FileInfo struct {
 	IsHidden   bool        `json:"isHidden"`
 	LinkPath   string      `json:"linkPath"`
 	Type       string      `json:"type"`
-	Mode       string      `json:"mode"`
 	MimeType   string      `json:"mimeType"`
 	UpdateTime time.Time   `json:"updateTime"`
 	ModTime    time.Time   `json:"modTime"`
@@ -84,7 +83,6 @@ func NewFileInfo(op FileOption) (*FileInfo, error) {
 		IsSymlink: IsSymlink(info.Mode()),
 		Extension: filepath.Ext(info.Name()),
 		IsHidden:  IsHidden(op.Path),
-		Mode:      fmt.Sprintf("%04o", info.Mode().Perm()),
 		MimeType:  GetMimeType(op.Path),
 	}
 
@@ -309,7 +307,6 @@ func (f *FileInfo) listChildren(option FileOption) error {
 			IsHidden:  IsHidden(fPath),
 			Extension: filepath.Ext(name),
 			Path:      fPath,
-			Mode:      fmt.Sprintf("%04o", df.Mode().Perm()),
 		}
 		if isSymlink {
 			file.LinkPath = GetSymlink(fPath)
