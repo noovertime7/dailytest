@@ -58,13 +58,14 @@ type FileSearchInfo struct {
 func NewFileInfo(op FileOption) (*FileInfo, error) {
 	var appFs = afero.NewOsFs()
 
-	if op.Path == "" && runtime.GOOS == "windows" {
-		return listDrives(), nil
-	}
-
 	op.Path = filepath.Clean(op.Path)
-	if runtime.GOOS == "windows" {
-		op.Path = strings.ReplaceAll(op.Path, "/", "\\")
+
+	if op.Path == "" {
+		if runtime.GOOS == "windows" {
+			return listWindowsDrives(appFs)
+		} else {
+			op.Path = "/"
+		}
 	}
 
 	info, err := appFs.Stat(op.Path)
@@ -104,33 +105,50 @@ func NewFileInfo(op FileOption) (*FileInfo, error) {
 	}
 	return file, nil
 }
-func listDrives() *FileInfo {
+
+func listWindowsDrives(fs afero.Fs) (*FileInfo, error) {
+	drives, err := getWindowsDrives()
+	if err != nil {
+		return nil, err
+	}
+
+	root := &FileInfo{
+		Fs:        fs,
+		Path:      "",
+		Name:      "Drives",
+		IsDir:     true,
+		Type:      "disk",
+		Items:     drives,
+		ItemTotal: len(drives),
+	}
+
+	return root, nil
+}
+
+func getWindowsDrives() ([]*FileInfo, error) {
 	cmd := exec.Command("wmic", "logicaldisk", "get", "name")
 	output, err := cmd.Output()
 	if err != nil {
-		return nil
+		return nil, err
 	}
 
+	var drives []*FileInfo
 	lines := strings.Split(string(output), "\n")
-	var items []*FileInfo
-	for _, line := range lines[1:] {
-		line = strings.TrimSpace(line)
-		if line == "" {
-			continue
+	for _, line := range lines {
+		drive := strings.TrimSpace(line)
+		if drive != "" && drive != "Name" {
+			drives = append(drives, &FileInfo{
+				Name:  drive,
+				Path:  drive + "\\",
+				IsDir: true,
+				Type:  "disk",
+			})
 		}
-
-		items = append(items, &FileInfo{
-			Name:  line,
-			Path:  line,
-			IsDir: true,
-		})
 	}
 
-	return &FileInfo{
-		Items:     items,
-		ItemTotal: len(items),
-	}
+	return drives, nil
 }
+
 func (f *FileInfo) search(search string, count int) (files []FileSearchInfo, total int, err error) {
 	cmd := exec.Command("find", f.Path, "-name", fmt.Sprintf("*%s*", search))
 	output, err := cmd.StdoutPipe()
@@ -247,10 +265,16 @@ func (f *FileInfo) listChildren(option FileOption) error {
 		}
 		name := df.Name()
 		fPath := path.Join(df.Path, df.Name())
+		if runtime.GOOS == "windows" {
+			fPath = filepath.Join(df.Path, df.Name())
+		}
 		if option.Search != "" {
 			if option.ContainSub {
 				fPath = df.Path
 				name = strings.TrimPrefix(strings.TrimPrefix(fPath, f.Path), "/")
+				if runtime.GOOS == "windows" {
+					name = strings.TrimPrefix(strings.TrimPrefix(fPath, f.Path), "\\")
+				}
 			} else {
 				lowerName := strings.ToLower(name)
 				lowerSearch := strings.ToLower(option.Search)
