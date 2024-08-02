@@ -22,7 +22,7 @@ func main() {
 	os.Setenv("PLUGIN_PATH", pluginPath)
 
 	// 创建并启动插件进程
-	cmd := exec.Command("./myplugin/plugin.exe")
+	cmd := exec.Command("./myplugin/KV-1.0.2.exe")
 	pluginClient := plugin.NewClient(&plugin.ClientConfig{
 		HandshakeConfig: plugin2.HandshakeConfig,
 		Plugins: map[string]plugin.Plugin{

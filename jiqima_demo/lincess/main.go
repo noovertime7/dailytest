@@ -22,7 +22,7 @@ type License struct {
 func main() {
 	license := License{
 		Name:           "license_test2",
-		BackupCapacity: 200000000000,
+		BackupCapacity: 3000000000000,
 		AgentNum:       30,
 		IssuanceDate:   time.Now(),
 		Code:           "bc9f93a4ffbd056bef99ba811b2c0d5a",

@@ -8,10 +8,10 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	shared "plugin-demo/shard"
 
 	hclog "github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/go-plugin"
-	"github.com/hashicorp/go-plugin/examples/basic/shared"
 )
 
 func main() {
@@ -26,7 +26,7 @@ func main() {
 	client := plugin.NewClient(&plugin.ClientConfig{
 		HandshakeConfig: handshakeConfig,
 		Plugins:         pluginMap,
-		Cmd:             exec.Command("E:\\code\\dailytest\\go-plugin-demo\\examples\\basic\\plugin\\KV-1.0.2.exe"),
+		Cmd:             exec.Command("E:\\code\\dailytest\\plugin-demo\\plugin\\KV-1.0.2.exe"),
 		Logger:          logger,
 	})
 	defer client.Kill()
@@ -38,7 +38,7 @@ func main() {
 	}
 
 	// Request the plugin
-	raw, err := rpcClient.Dispense("greeter")
+	raw, err := rpcClient.Dispense("Greeter")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -46,8 +46,8 @@ func main() {
 	// We should have a Greeter now! This feels like a normal interface
 	// implementation but is in fact over an RPC connection.
 	greeter := raw.(shared.Greeter)
-	res := greeter.Greet()
-	fmt.Println(res)
+	fmt.Println(greeter.Greet())
+	fmt.Println(greeter.SayHello())
 }
 
 // handshakeConfigs are used to just do a basic handshake between
@@ -62,5 +62,5 @@ var handshakeConfig = plugin.HandshakeConfig{
 
 // pluginMap is the map of plugins we can dispense.
 var pluginMap = map[string]plugin.Plugin{
-	"greeter": &shared.GreeterPlugin{},
+	"Greeter": &shared.Plugin{},
 }
